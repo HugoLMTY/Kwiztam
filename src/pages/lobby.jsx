@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaCrown, FaRegCopy, FaRegEye, FaRegEyeSlash, FaSkull } from 'react-icons/fa';
+import { FaCrown, FaRegCopy, FaRegEye, FaRegEyeSlash, FaSkull, FaThumbsUp } from 'react-icons/fa';
+import { ShakeLittle } from 'reshake';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
@@ -9,15 +10,15 @@ const Lobby = () => {
 		code: 'A4C2A0B',
 		showCode: true,
 		players: [
-			{ playerId: 1, host: false, name: 'Player 1', score: 0, answers: [ ] },
-			{ playerId: 2, host: false, name: 'Player 2', score: 0, answers: [ ] },
-			{ playerId: 3, host: false, name: 'Player 3', score: 40, answers: [ ] },
-			{ playerId: 4, host: false, name: 'Player 4', score: 0, answers: [ ] },
-			{ playerId: 5, host: false, name: 'Player 5', score: 0, answers: [ ] },
-			{ playerId: 6, host: true, 	name: 'Player 6', score: 420, answers: [ ] },
-			{ playerId: 7, host: false, name: 'Player 7', score: 10, answers: [ ] },
-			{ playerId: 8, host: false, name: 'Player 8', score: 0, answers: [ ] },
-			{ playerId: 9, host: false, name: 'Player 9', score: 1337, answers: [ ] },
+			{ playerId: 1, host: false, ready: true, name: 'Player 1', score: 0, answers: [ ] },
+			{ playerId: 2, host: false, ready: false, name: 'Player 2', score: 0, answers: [ ] },
+			{ playerId: 3, host: false, ready: false, name: 'Player 3', score: 40, answers: [ ] },
+			{ playerId: 4, host: false, ready: false, name: 'Player 4', score: 0, answers: [ ] },
+			{ playerId: 5, host: false, ready: true, name: 'Player 5', score: 0, answers: [ ] },
+			{ playerId: 6, host: true,  ready: false, name: 'Player 6', score: 420, answers: [ ] },
+			{ playerId: 7, host: false, ready: false, name: 'Player 7', score: 10, answers: [ ] },
+			{ playerId: 8, host: false, ready: true, name: 'Player 8', score: 0, answers: [ ] },
+			{ playerId: 9, host: false, ready: false, name: 'Player 9', score: 1337, answers: [ ] },
 		]
 	});
 
@@ -81,7 +82,6 @@ const Lobby = () => {
 				<LobbyInfos>
 
 					<CodeContainer>
-						{/* <CodeTitle>Game Code</CodeTitle> */}
 						<CodeToggler onClick={ () => setLobby({ ...lobby, showCode: !lobby.showCode }) }>
 							{ lobby.showCode ? <FaRegEye /> : <FaRegEyeSlash /> }
 						</CodeToggler>
@@ -109,6 +109,12 @@ const Lobby = () => {
 										: <> </>
 									}
 
+									{
+										player.ready
+										? <PlayerReady fixed={true} r={10} > <FaThumbsUp /> </PlayerReady>
+										: <> </>
+									}
+
 									<PlayerName >{player.name}</PlayerName>
 								</PlayerInfos>
 
@@ -122,6 +128,10 @@ const Lobby = () => {
 						))}
 
 					</PlayersContainer>
+
+					<StartAction>
+						<StartGameText>Start Game</StartGameText>
+					</StartAction>
 
 				</LobbyInfos>
 
@@ -172,28 +182,22 @@ const CodeContainer = styled.div`
 
 
 	display: flex;
-	justify-content: space-around;
-	align-content: space-around;
+	justify-content: space-between;
+	align-content: center;
 
-	width: 42%;
+	width: 100vh;
 `;
 
 const CodeToggler = styled.h1`
-	/* color: white; */
-	/* text-align: center; */
-	/* font-size: 2.20em; */
-
 	user-select: none;
+	cursor: pointer;
 	
 	width: 100%;
 `;
 
 const CodeCopy = styled.h1`
-	/* color: white; */
-	/* text-align: center; */
-	/* font-size: 2.20em; */
-
 	user-select: none;
+	cursor: pointer;
 
 	width: 100%;
 `;
@@ -273,6 +277,11 @@ const PlayerHost = styled(FaCrown)`
 	font-size: 2.5em;
 `;
 
+const PlayerReady = styled(ShakeLittle)`
+	color: #00cc00;
+	font-size: 2.5em;
+`;
+
 
 const PlayerPictureContainer = styled.div`
 	/* border: 1px solid red; */
@@ -336,6 +345,31 @@ const PlayerAction = styled.button`
 	:hover {
 		transform: scale(1.03);
 	}
+`;
+
+
+const StartAction = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background: #40b336 !important;
+	
+	border-radius: 10px;
+	border: 0px;
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+
+	margin-top: 20px;
+	padding: 20px;
+
+	width: 42%;
+
+	border: none;
+	background: none;
+`;
+
+const StartGameText = styled.h1`
+	color: whitesmoke;
 `;
 
 export default Lobby;

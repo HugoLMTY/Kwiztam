@@ -3,6 +3,7 @@ import {
 	FaDumpster,
 	FaGamepad,
 	FaHome,
+	FaPencilAlt,
 	FaStickerMule,
 } from 'react-icons/fa';
 import React, { useState, useEffect } from 'react';
@@ -28,6 +29,11 @@ const SideBar = ({children}) => {
 			name: 'Lobby',
 			path: '/lobby',
 			icon: <FaDumpster />
+		},
+		{
+			name: 'Editor',
+			path: '/editor',
+			icon: <FaPencilAlt />
 		},
 		{
 			name: 'Game',

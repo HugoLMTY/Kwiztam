@@ -3,10 +3,27 @@ import styled from 'styled-components';
 
 const Editor = () => {
 	return (
-		<div>
-			<h1>Editor</h1>
-		</div>
+		<EditorContainer>
+			<EditorTitle>Editor</EditorTitle>
+		</EditorContainer>
 	);
 }
+
+
+const EditorContainer = styled.div`	
+	background: linear-gradient(to bottom right, #3399ff 0%, #ff00ff 100%);
+	height: 100vh;
+	width: 100vw;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+`;
+
+const EditorTitle = styled.h1`
+	color: whitesmoke;
+	/* flex-flow: ; */
+`;
 
 export default Editor;

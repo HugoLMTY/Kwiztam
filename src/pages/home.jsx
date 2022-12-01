@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shake } from 'reshake';
+import { Shake, ShakeLittle } from 'reshake';
 import styled from 'styled-components';
 
 const Home = () => {
@@ -24,6 +24,37 @@ const Home = () => {
 
 				</Boomz>
 			</TamzContainer>
+
+
+			<ButtonsContainer>
+				<Button
+				h={5}
+				v={5}
+				r={18}
+				dur={300}
+				int={52.4}
+				max={91}
+				fixed={true}
+				fixedStop={true}
+				freez={false}
+				> 	
+					Créer une partie 
+				</Button>
+				
+				<Button
+				h={5}
+				v={5}
+				r={18}
+				dur={300}
+				int={52.4}
+				max={91}
+				fixed={true}
+				fixedStop={true}
+				freez={false}
+				>  
+					Rejoindre une partie 
+				</Button>
+			</ButtonsContainer>
 		</HomeContainer>
 	);
 }
@@ -44,6 +75,13 @@ const TamzContainer = styled.div`
 
 `;
 
+const ButtonsContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+
 const Boomz = styled(Shake)`
 	border: solid 1px red;
 	font-size: 100px;
@@ -59,5 +97,16 @@ const Title = styled.h1`
 	left: 240px;
 	z-index: 419;
 `;
+
+const Button = styled(ShakeLittle)`
+	background: #80DFFF;
+	border: none;
+	border-radius: 10px;
+	color: white;
+	font-size: 42px;
+	padding: 10px 20px;
+	margin: 10px;
+`;
+
 
 export default Home;
