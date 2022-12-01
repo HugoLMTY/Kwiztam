@@ -4,16 +4,26 @@ import {
 	FaGamepad,
 	FaHome,
 	FaPencilAlt,
+	FaSignInAlt,
+	FaSignOutAlt,
 	FaStickerMule,
 } from 'react-icons/fa';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/userContext';
+import { useEffect } from 'react';
 
-const SideBar = ({children}) => {
+const SideBar = () => {
 
 	const [ sidebar, setSidebar ] = useState({ state: false });
 
+	const { user, setUser } = useContext(UserContext)
+	useEffect(() => {
+		// console.log({ user })
+	}, [ user ])
+	
 
 	const toggleSidebar = () => {
 		setSidebar({ state: !sidebar.state });
@@ -23,27 +33,43 @@ const SideBar = ({children}) => {
 		{
 			name: 'Home',
 			path: '/',
-			icon: <FaHome />
+			icon: <FaHome />,
+			needAuth: false,
 		},
 		{
 			name: 'Lobby',
 			path: '/lobby',
-			icon: <FaDumpster />
+			icon: <FaDumpster />,
+			needAuth: true,
 		},
 		{
 			name: 'Editor',
 			path: '/editor',
-			icon: <FaPencilAlt />
+			icon: <FaPencilAlt />,
+			needAuth: true,
 		},
 		{
 			name: 'Game',
 			path: '/game',
-			icon: <FaGamepad />
+			icon: <FaGamepad />,
+			needAuth: true,
 		}
 	]
 
+	const login = () => {
+		setUser({
+			id: 1,
+			name: 'John Doe',
+			avatar: './assets/img/defaultProfilePicture.png'
+		})
+	}
+
+	const logout = () => {
+		setUser(null)
+	}
+
 	return (
-		<SideBarContainer style={ { width: sidebar.state ? '27%' : '5%', zIndex: 420} }>
+		<SideBarContainer style={ { width: sidebar.state ? '15%' : '5%', zIndex: 420} }>
 
 			<SideBarHeader>
 				{
@@ -67,7 +93,7 @@ const SideBar = ({children}) => {
 				{
 					pages.map((page, index) => {
 						return (
-							<SideBarLink to={page.path} key={index} state={ sidebar.state }>
+							<SideBarLink to={page.path} key={index} state={ sidebar.state } display={ (page.needAuth && !user) ? 'none' : 'flex' } >
 								<Icon> {page.icon} </Icon>
 								{
 									sidebar.state
@@ -78,6 +104,13 @@ const SideBar = ({children}) => {
 						)
 					})
 				}
+
+				{ 
+				user 
+					? <SignOut onClick={ () => logout() }/>
+					: <SignIn onClick={ () => login() }/>
+				}
+
 
 			</SideBarMenu>
 
@@ -141,13 +174,20 @@ const SideBarLink = styled(NavLink)`
 	padding: 20px;
 
 	color: whitesmoke;
+	text-decoration: none;
+
+	display: ${ props => props.display };
+	flex-direction: row;
+	justify-content: center;
+	align-content: center;
 	
 	transition-duration: 0.1s;
+
 	:hover {
 		color: lightblue;
 
 		cursor: pointer;
-		transform: ${state => state ? 'scale(1.1)' : 'scale(2)'};
+		transform: ${props => props.state ? 'scale(1.1)' : 'scale(1.69)'};
 	}
 `;
 
@@ -166,5 +206,30 @@ const Icon = styled.div`
 
 	transition-duration: 0.1s;
 `;
+
+const SignIn = styled(FaSignInAlt)`
+	cursor: pointer;
+
+	transition-duration: 0.1s;
+	:hover {
+		color: lightblue;
+
+		cursor: pointer;
+		transform: ${props => props.state ? 'scale(1.1)' : 'scale(1.69)'};
+	}
+`;
+
+const SignOut = styled(FaSignOutAlt)`
+	cursor: pointer;
+
+	transition-duration: 0.1s;
+	:hover {
+		color: red;
+
+		cursor: pointer;
+		transform: ${props => props.state ? 'scale(1.1)' : 'scale(1.69)'};
+	}
+`;
+
 
 export default SideBar;

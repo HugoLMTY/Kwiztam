@@ -1,89 +1,136 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRef } from 'react';
 import { FaPoop, FaTrophy } from 'react-icons/fa';
-import { ShakeLittle, ShakeCrazy, ShakeRotate } from 'reshake';
+import { ShakeLittle } from 'reshake';
 import randomColor from 'randomcolor';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
+import { UserContext } from '../context/userContext';
+
 const Game = () => {
 
+	//? --- User ---
+	const { user } = useContext(UserContext);
+	useEffect(() => {
+		console.log({ user })
+		if (!user) {
+			Swal.fire({
+				title: 'You are not logged in!',
+				icon: 'error',
+				confirmButtonText: 'Ok'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					window.location.href = '/';
+				}
+			})
+		}
+	}, [ user ] )
+
+
+	//? --- Game State ---
 	const [game, setGame] = useState({
 		title: 'Title',
 		players: [
-			{ playerId: 1, name: 'Player 1', score: 0, answers: [ ] },
-			{ playerId: 2, name: 'Player 2', score: 0, answers: [ ] },
-			{ playerId: 3, name: 'Player 3', score: 40, answers: [ ] },
-			{ playerId: 4, name: 'Player 4', score: 0, answers: [ ] },
-			{ playerId: 5, name: 'Player 5', score: 0, answers: [ ] },
-			{ playerId: 6, name: 'Player 6', score: 420, answers: [ ] },
-			{ playerId: 7, name: 'Player 7', score: 10, answers: [ ] },
-			{ playerId: 8, name: 'Player 8', score: 0, answers: [ ] },
-			{ playerId: 9, name: 'Player 9', score: 1337, answers: [ ] },
+			{ playerId: 1, name: 'Player 1', score: 0, 		answers: [ ] },
+			{ playerId: 2, name: 'Player 2', score: 0, 		answers: [ ] },
+			{ playerId: 3, name: 'Player 3', score: 40, 	answers: [ { questionId: 1, answerId: 1 } ] },
+			{ playerId: 4, name: 'Player 4', score: 0, 		answers: [ { questionId: 1, answerId: 2 } ] },
+			{ playerId: 5, name: 'Player 5', score: 0, 		answers: [ { questionId: 1, answerId: 3 } ] },
+			{ playerId: 6, name: 'Player 6', score: 420, 	answers: [ ] },
+			{ playerId: 7, name: 'Player 7', score: 10, 	answers: [ ] },
+			{ playerId: 8, name: 'Player 8', score: 0, 		answers: [ ] },
+			{ playerId: 9, name: 'Player 9', score: 1337, 	answers: [ ] },
 		],
-		questions: [
-			{
-				questionId: 1,
-				question: 'What is the capital of France?',
-				type: 'text',
-				duration: 30,
-				points: 10,
-				answers: [
-					{ answerId: 1, answer: 'Paris', 	correct: true },
-					{ answerId: 2, answer: 'London', 	correct: false },
-					{ answerId: 3, answer: 'Berlin', 	correct: false },
-					{ answerId: 4, answer: 'Rome', 		correct: false },
-				],
-			},
-			{
-				questionId: 2,
-				question: 'When did the Second World War end?',
-				type: 'date',
-				duration: 30,
-				points: 10,
-				answers: [
-					{ answerId: 1, answer: '1945-05-08', 	correct: true },
-					{ answerId: 2, answer: '1945-05-09', 	correct: false },
-					{ answerId: 3, answer: '1945-05-10', 	correct: false },
-					{ answerId: 4, answer: '1945-05-11', 	correct: false },
-				],
-			},
-			{
-				questionId: 3,
-				question: 'Sort the following numbers from smallest to largest',
-				type: 'sort',
-				duration: 30,
-				points: 10,
-				answers: [
-					{ answerId: 1, answer: '1', 	correct: true },
-					{ answerId: 2, answer: '2', 	correct: true },
-					{ answerId: 3, answer: '3', 	correct: true },
-					{ answerId: 4, answer: '4', 	correct: true },
-				],
-			}
-		],
+		quizz: {
+			author: { playerId: 6, name: 'Player 6', score: 420, answers: [ ] },
+			questions: [
+				{
+					questionId: 1,
+					question: 'What is the capital of France?',
+					type: 'text',
+					duration: 30,
+					points: 10,
+					answers: [
+						{ answerId: 1, answer: 'Paris', 	correct: true },
+						{ answerId: 2, answer: 'London', 	correct: false },
+						{ answerId: 3, answer: 'Berlin', 	correct: false },
+						{ answerId: 4, answer: 'Rome', 		correct: false },
+					],
+				},
+				{
+					questionId: 2,
+					question: 'When did the Second World War end?',
+					type: 'date',
+					duration: 10,
+					points: 10,
+					answers: [
+						{ answerId: 1, answer: '1945-05-08', 	correct: true },
+						{ answerId: 2, answer: '1945-05-09', 	correct: false },
+						{ answerId: 3, answer: '1945-05-10', 	correct: false },
+						{ answerId: 4, answer: '1945-05-11', 	correct: false },
+					],
+				},
+				{
+					questionId: 3,
+					question: 'Sort the following numbers from smallest to largest',
+					type: 'sort',
+					duration: 14,
+					points: 10,
+					answers: [
+						{ answerId: 1, answer: '1', 	correct: true },
+						{ answerId: 2, answer: '2', 	correct: true },
+						{ answerId: 3, answer: '3', 	correct: true },
+						{ answerId: 4, answer: '4', 	correct: true },
+					],
+				}
+			]
+		},
 
 	});
 	useEffect(() => {
 		const sortedPlayers = game.players.sort((a, b) => b.score - a.score);
-		setGame({ ...game, players: sortedPlayers });
+		if (game.players !== sortedPlayers) setGame({ ...game, players: sortedPlayers });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ game.players ])
 
-	const colors = useRef(randomColor({ count: 50, luminosity: 'dark' }));
 
+
+	//? --- Current Question ---
+	const [currentQuestion, setCurrentQuestion] = useState(0);
+	useEffect(() => {
+		setTimer({ ...timer, time: game.quizz.questions[currentQuestion].duration, current: 0 });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ currentQuestion ])
+
+
+
+	//? --- Timer ---
 	const [ timer, setTimer ] = useState({ time: 50, current: 20, playing: false });
 	const timerRef = useRef(null)
 	useEffect(() => {
 		clearInterval(timerRef.current)
 
 		if (timer.playing) {
-			if (timer.time - timer.current <= 0) return (setTimer({ ...timer, playing: false, current: timer.time }), alert("done"))
+			if (timer.time - timer.current <= 0) {
+				setTimer({ ...timer, playing: false, current: timer.time })
+
+				Swal.fire({
+					title: 'Time\'s up!',
+					icon: 'info',
+					confirmButtonText: 'Next question',
+				})
+				.then(res => {
+					if (res.isConfirmed) setCurrentQuestion(currentQuestion + 1);
+				})
+			}
 
 			timerRef.current = setInterval(() => {				
 				setTimer({ ...timer, current: timer.current + 1 });
 			}, 1000);
 		}
 		return () => clearInterval(timerRef.current);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ timer ])
 
 
@@ -142,11 +189,10 @@ const Game = () => {
 		}
 	}
 
-
 	return (
 		<>
 			<GameContainer >
-				<GameTitle> { game.title } </GameTitle>
+				<GameTitle> { game.quizz.questions[currentQuestion].question } </GameTitle>
 
 
 				<PlayersContainer>
@@ -154,8 +200,9 @@ const Game = () => {
 					game.players.map( (player, index) => {
 						const isFirst 	= index === 0;
 						const isLast 	= index === game.players.length - 1
+
 						return (
-								<Player key={ index }>
+								<Player key={ index } hasAnswered={ player.answers.findIndex(a => a.questionId === game.quizz.questions[currentQuestion].questionId) !== -1 }>
 									{ isFirst ? <Trophy /> 	: <></> 	} 
 									{ isLast  ? <Poop /> 	: <></> 	}
 
@@ -169,8 +216,13 @@ const Game = () => {
 				</PlayersContainer>
 
 				<QuestionsContainer>
-					<button onClick={ () => { setTimer({ ...timer, playing: !timer.playing }) }}> 		{ timer.playing ? 'Pause' : 'Play' } 	</button>
-					<button onClick={ () => { setTimer({ ...timer, current: 30, playing: false }) }}> 	Reset 									</button>
+					<button onClick={ () => { setTimer({ ...timer, playing: !timer.playing }) }}> 					
+						{ timer.playing ? 'Pause' : 'Play' } 	
+					</button>
+
+					<button onClick={ () => { setTimer({ ...timer, current: timer.time - 5, playing: false }) }}> 	
+						Reset 									
+					</button>
 
 
 					<TimerText timer={ timer }> { timer.time - timer.current } </TimerText>
@@ -188,10 +240,10 @@ const Game = () => {
 					</TimerContainer>
 
 					<QuestionContainer>
-						<QuestionTitle> { game.questions[0].question } </QuestionTitle>
+						{/* <QuestionTitle> { game.quizz.questions[currentQuestion].question } </QuestionTitle> */}
 						<QuestionAnswers>
 							{
-								game.questions[0].answers.map( (answer, index) => {
+								game.quizz.questions[currentQuestion].answers.map( (answer, index) => {
 									return (
 										<Answer 
 										key={ index }
@@ -237,7 +289,7 @@ const GameTitle = styled.h1`
 `;
 
 const PlayersContainer = styled.div`
-	border: 4px solid ;
+	/* border: 4px solid ; */
 	border-radius: 20px;	
 
 	display: flex;
@@ -274,6 +326,8 @@ const Player = styled.div`
 	background: linear-gradient(to bottom right, #80dfff 0%, #cc99ff 100%);
 	border-radius: 20px;
 
+	box-shadow: ${ props => props.hasAnswered ? '0px 0px 5px 4px #16df00' : '0px 0px 0px 0px #000000' };
+
 	padding: 10px;
 	margin: 5px;
 
@@ -283,14 +337,15 @@ const Player = styled.div`
 	justify-content: space-between;
 	align-items: center;
 
-	transition-duration: 0.2s;
-
+	
 	user-select: none;
-
+	
+	transition-duration: 0.2s;
 
 	:hover {
 		transform: scale(1.03);
-		box-shadow: 0px 0px 10px 0px #8cc0de;
+		box-shadow: ${ props => props.hasAnswered ? '0px 0px 10px 6px #16df00' : '0px 0px 0px 0px #000000' };
+
 	}
 
 	/* select the first child */
@@ -323,7 +378,7 @@ const PlayerScore = styled.h2`
 `;
 
 const QuestionsContainer = styled.div`
-	border: 4px solid;
+	/* border: 4px solid; */
 	border-radius: 20px;
 
 	position: absolute;
@@ -377,17 +432,8 @@ const QuestionContainer = styled.div`
 	margin-top: 20px;
 `;
 
-const QuestionTitle = styled.h1`
-	color: white;
-	font-size: 2.4em;
-	
-	text-align: center;
-
-	padding: 10px;
-`;
-
 const QuestionAnswers = styled.div`
-	border: 1px solid red;
+	/* border: 1px solid red; */
 
 	display: flex;
 	flex-direction: row;

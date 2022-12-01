@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { Shake, ShakeLittle } from 'reshake';
 import styled from 'styled-components';
 
@@ -18,7 +19,7 @@ const Home = () => {
 					fixedStop={false}
 					freez={false}
 				>
-					<img height={ 700 } src={ require("../assets/img/boom.png") } alt="logo" />
+					<img height={ 700 } src={ require("../assets/img/boom.png") } alt="logo" />					
 					
 					<Title> Kwiz'Tam </Title>
 
@@ -38,7 +39,9 @@ const Home = () => {
 				fixedStop={true}
 				freez={false}
 				> 	
-					Créer une partie 
+					<Link to="/lobby">
+						Créer une partie 
+					</Link>
 				</Button>
 				
 				<Button
@@ -52,7 +55,9 @@ const Home = () => {
 				fixedStop={true}
 				freez={false}
 				>  
-					Rejoindre une partie 
+					<Link to="/game">
+						Rejoindre une partie
+					</Link>
 				</Button>
 			</ButtonsContainer>
 		</HomeContainer>
@@ -63,6 +68,10 @@ const HomeContainer = styled.div`
 	background: linear-gradient(to bottom right, #3399ff 0%, #ff00ff 100%);
 	height: 100vh;
 	width: 100vw;
+
+	user-select: none;
+
+	overflow: hidden;
 
 	display: flex;
 	justify-content: center;
@@ -83,7 +92,7 @@ const ButtonsContainer = styled.div`
 `;
 
 const Boomz = styled(Shake)`
-	border: solid 1px red;
+	/* border: solid 1px red; */
 	font-size: 100px;
 	color: white;
 `;
@@ -100,13 +109,27 @@ const Title = styled.h1`
 
 const Button = styled(ShakeLittle)`
 	background: #80DFFF;
+
+	font-size: 42px;
+
 	border: none;
 	border-radius: 10px;
-	color: white;
-	font-size: 42px;
+	
 	padding: 10px 20px;
 	margin: 10px;
+
 `;
 
+const Link = styled(NavLink)`
+	color: white;
+	text-decoration: none;
+
+	transition-duration: 0.1s;
+
+	:hover {
+		color: black;
+	}
+
+`;
 
 export default Home;

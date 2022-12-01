@@ -1,3 +1,5 @@
+const colors = require('colors');
+
 class tools {
 	// prettier-ignore
 	static mapAddress(address, getName = false) {
@@ -256,21 +258,11 @@ class tools {
 			{ name: 'home', 	size: 2, 	boldeco: true, 		color: 'yellow', 		decolor: 'yellow' 	},
 			{ name: 'wizard', 	size: 1, 	boldeco: false, 	color: 'gray',	 		decolor: 'cyan',	deco: 'GW',	idColor: 'grey'	},
 
-			//? Presets par type de model
-			{ name: 'group', 	size: 2, 	boldeco: true, 		color: 'cyan', 			decolor: 'cyan' 	},
-			{ name: 'user', 	size: 2, 	boldeco: true, 		color: 'magenta', 		decolor: 'magenta' 	},
-			{ name: 'conv',		size: 1, 					 	color: 'blue', 			decolor: 'blue' 	},
-
 			//? Presets par type d'action
 			{ name: 'setter',	size: 1, 	boldeco: true, 		color: 'green', 		decolor: 'yellow',	deco: '><' 	},
 			{ name: 'toggler',	size: 1, 	boldeco: true, 		color: 'yellow', 		decolor: 'green',	deco: '^v' 	},
 			{ name: 'auth',		size: 1, 	boldeco: true, 		color: 'green', 		decolor: 'green' 	},
 			{ name: 'field',	size: 1, 	decostyle: 'dim',	color: 'yellow', 		decolor: 'yellow' 	},
-
-			//? Communication / Technos externes
-			{ name: 'socket',	size: 1,	bold: true,			color: 'brightMagenta', decolor: 'gray', 	deco: '---' },
-			{ name: 'whatsapp', size: 1,	bold: false,		color: 'green',			decolor: 'green', 	deco: 'w^w' },
-			{ name: 'stripe',	size: 5, 					 	color: 'gray', 			decolor: 'magenta' 	},
 
 			//? Surtout utilisés pour Stripe rn
 			{ name: 'notif',	size: 2, 					 	color: 'yellow', 		decolor: 'magenta' 	},
@@ -401,7 +393,7 @@ class tools {
 
 				//? Récupération de l'info entre les parenthèses (fichier concerné + ligne)
 				// .split(isProd ? 'backend/' : 'back/')
-				.split('AppartooAPI2\\')
+				.split('Kwiztam\\back\\')
 				//? ↑ Route en local
 				.reverse()[0].split(')')[0]
 
