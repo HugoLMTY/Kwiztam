@@ -8,6 +8,9 @@ import Swal from 'sweetalert2';
 
 import { UserContext } from '../context/userContext';
 
+import './style/lobby.css';
+import './../App.css';
+
 const Game = () => {
 
 	//? --- User ---
@@ -17,6 +20,7 @@ const Game = () => {
 		if (!user) {
 			Swal.fire({
 				title: 'You are not logged in!',
+				text: 'Please login to access this page',
 				icon: 'error',
 				confirmButtonText: 'Ok'
 			}).then((result) => {
@@ -192,7 +196,7 @@ const Game = () => {
 	return (
 		<>
 			<GameContainer >
-				<GameTitle> { game.quizz.questions[currentQuestion].question } </GameTitle>
+				<GameTitle className='title'> { game.quizz.questions[currentQuestion].question } </GameTitle>
 
 
 				<PlayersContainer>
@@ -276,7 +280,7 @@ const GameContainer = styled.div`
 `;
 
 const GameTitle = styled.h1`
-	color: white;
+	/* color: white;
 
 	text-align: center;
 	font-size: 4.20em;
@@ -285,7 +289,7 @@ const GameTitle = styled.h1`
 
 	padding: 50px;
 
-	overflow: hidden;
+	overflow: hidden; */
 `;
 
 const PlayersContainer = styled.div`
@@ -420,6 +424,8 @@ const TimerText = styled.h2`
 
 	z-index: 69;
 
+	user-select: none;
+	
 	text-align: center;
 
 	padding-top: 10px ;

@@ -14,6 +14,9 @@ import { NavLink } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../context/userContext';
 import { useEffect } from 'react';
+import Swal from 'sweetalert2';
+
+import Rest from '../services/rest';
 
 const SideBar = () => {
 
@@ -56,16 +59,116 @@ const SideBar = () => {
 		}
 	]
 
-	const login = () => {
-		setUser({
-			id: 1,
-			name: 'John Doe',
-			avatar: './assets/img/defaultProfilePicture.png'
+	const login = async () => {
+		const datas = await Swal.fire({
+			title: 'Login',
+			html: `
+				<input id="swal-input1" class="swal2-input" placeholder="Username">
+				<input id="swal-input2" class="swal2-input" placeholder="Password" type="password" >
+			`,
+			focusConfirm: false,
+			background: './assets/img/swalBg.jpg',
+
+			showDenyButton: true,
+			denyButtonText: 'Register',
+			denyButtonColor: '#7d6aa4',
+
+			confirmButtonText: 'Login',
+			confirmButtonColor: '#80dfff',
+
+			reverseButtons: true,
+
+			preConfirm: () => {
+				const el = (id) => document.getElementById(id).value
+				if (!el('swal-input1') || !el('swal-input2')) 
+					return Swal.showValidationMessage(`Please fill all fields`)
+
+				return [
+					document.getElementById('swal-input1').value,
+					document.getElementById('swal-input2').value
+				]
+			}
 		})
+		if (datas.isDenied) 
+			return register() 
+
+		if (!datas.isConfirmed) 
+			return false
+		
+		
+		const [ username, password ] = datas.value
+
+		const user = await Rest.login(username, password)
+		if (user) {
+			setUser({ user })
+			Swal.fire({
+				icon: 'success',
+				title: `Welcome back ${user.username}!`
+			})
+		}
 	}
 
-	const logout = () => {
-		setUser(null)
+	const register = async () => {
+		const datas = await Swal.fire({
+			title: 'Register',
+			html: `
+				<input id="swal-input1" class="swal2-input" placeholder="Username">
+				<input id="swal-input2" class="swal2-input" placeholder="Password" type="password" >
+			`,
+			focusConfirm: false,
+			background: './assets/img/swalBg.jpg',
+
+			showDenyButton: true,
+			denyButtonText: 'Login',
+			denyButtonColor: '#7d6aa4',
+
+			confirmButtonText: 'Register',
+			confirmButtonColor: '#80dfff',
+
+			reverseButtons: true,
+
+			preConfirm: async () => {
+				const el = (id) => document.getElementById(id).value
+				if (!el('swal-input1') || !el('swal-input2')) 
+					return Swal.showValidationMessage(`Please fill all fields`)
+				const { available } = await Rest.checkAvailability(el('swal-input1'))
+				if (!available)
+					return Swal.showValidationMessage(`Username already taken`)
+
+				return [
+					document.getElementById('swal-input1').value,
+					document.getElementById('swal-input2').value
+				]
+			}
+		})
+		if (datas.isDenied) 
+			return login() 
+
+		if (!datas.isConfirmed) 
+			return false
+		
+		const [ username, password ] = datas.value
+		const user = await Rest.register(username, password)
+		if (user) {
+			setUser(user)
+			Swal.fire({
+				icon: 'success',
+				title: `Welcome ${user.username}!`
+			})
+		}
+	}
+
+	const logout = async () => {
+		const choice = await Swal.fire({
+			title: 'Logout',
+			text: 'Are you sure you want to logout?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes'
+		})
+		if (choice.isConfirmed) setUser(null)
 	}
 
 	return (

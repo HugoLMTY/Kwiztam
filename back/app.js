@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const tools = require('./services/toolsService');
 
@@ -15,6 +16,13 @@ const PORT = 3001
 const isProd = false
 
 app.use(bodyParser.json());
+
+
+const corsOption = {
+    origin: ['http://localhost:3000'],
+};
+app.use(cors(corsOption));
+app.use(cors())
 
 const dbName = 'kwiztam';
 const dbPath = `mongodb://dev:dev@cluster0-shard-00-00.nz5xy.mongodb.net:27017,cluster0-shard-00-01.nz5xy.mongodb.net:27017,cluster0-shard-00-02.nz5xy.mongodb.net:27017/${dbName}?ssl=true&replicaSet=atlas-22r9rt-shard-0&authSource=admin&retryWrites=true&w=majority`
@@ -37,6 +45,11 @@ let nextRetry = 2000
 
 connectDb()
 
+app.use('', (req, res, next) => {
+	// console.log('req received', req.url)
+	next()
+})
+
 app.get('/', (req, res) => {
 	tools.log('Query', { id: 'GET', preset: 'home'  })
 })
@@ -56,7 +69,23 @@ app.get('/room/:roomId', (req, res) => {
 
 })
 
-app.post('/user/create', async (req, res) => {
+app.post('/auth/register/checkAvailibility', async (req, res) => {
+	tools.log('Query', { id: 'POST Register'  })
+
+	try {
+		if (!req.body.username) return res.status(400).send({ message: 'Username is required' })
+
+		const user = await User.find({ username: req.body.username })
+		const available = user.length === 0
+	
+		return res.status(200).send({ available })	
+	} catch (err) {
+		tools.log('', { err })
+		res.status(500).send(err)
+	}
+})
+
+app.post('/auth/register', async (req, res) => {
 	tools.log('Query', { id: 'POST User', preset: 'home' })
 
 	try {
@@ -70,12 +99,37 @@ app.post('/user/create', async (req, res) => {
 			username,
 			password,
 		})
+
 		await user.save()
 
 		return res.status(200).send(user)
 
 	} catch(err) {
-		tools.log('Error', { id: 'POST User', preset: 'home', err })
+		tools.log('', { err })
+		res.status(500).send(err)
+	}
+})
+
+app.post('/auth/login', async (req, res) => {
+	tools.log('Query', { id: `POST Login - ${ req.body.username }`, preset: 'home' })
+
+	try {
+
+		const {
+			username,
+			password
+		} = req.body
+		
+		const user = await User.findOne({ username })
+		if (!user) return res.status(404).send('User not found')
+
+		// TODO - Add bcrypt
+		if (user.password !== password) return res.status(401).send('Wrong password')
+
+		return res.status(200).send(user)
+
+	} catch(err) {
+		tools.log('', { err })
 		res.status(500).send(err)
 	}
 })

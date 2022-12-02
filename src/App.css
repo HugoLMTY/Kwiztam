@@ -37,3 +37,22 @@
 		transform: rotate(360deg);
 	}
 }
+
+
+
+.title {
+	color: white;
+	text-align: center;
+	font-size: 4.20em;
+
+	width: 100%;
+
+	position: absolute;
+
+	user-select: none;
+	
+	margin: 69px;
+	top: 0;
+
+	text-shadow: 7px 7px 10px #64a7b3;
+}

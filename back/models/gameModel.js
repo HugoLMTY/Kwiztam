@@ -4,8 +4,6 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const GameSchema = new Schema({
-	_id: ObjectId,
-
 	title: 		{ type: String, 	required: true },
 	players: 	[{ type: ObjectId, 	ref: 'User' }],
 

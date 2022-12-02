@@ -5,15 +5,13 @@ const ObjectId = Schema.ObjectId;
 const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
-	id: ObjectId,
+	username: 		{ type: String, required: true },
+	password: 		{ type: String, required: true },
 
-	username: { type: String, required: true, unique: true },
-	password: { type: String, required: true },
-
-	quizzs: 			[{ 	type: ObjectId, ref: 'Quizz', 	default: [] 	}],
+	quizzs: 		[{ 	type: ObjectId, ref: 'Quizz', 	default: [] 	}],
 	
-	previousGames: 		[{ 	type: ObjectId, ref: 'Game', 	default: [] 	}],
-	currentGame: 		{ 	type: ObjectId, ref: 'Game'		},
+	previousGames: 	[{ 	type: ObjectId, ref: 'Game', 	default: [] 	}],
+	currentGame: 	{ 	type: ObjectId, ref: 'Game'		},
 
 }, { timestamps: true });
 

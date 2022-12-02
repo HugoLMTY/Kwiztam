@@ -4,8 +4,6 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const QuizzSchema = new Schema({
-	id: ObjectId,
-
 	title: 		{ type: String, 	required: true },
 	userId: 	{ type: ObjectId, 	required: true },
 

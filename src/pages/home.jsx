@@ -4,11 +4,12 @@ import { Shake, ShakeLittle } from 'reshake';
 import styled from 'styled-components';
 
 const Home = () => {
+	const animate = true
 	return (
 		<HomeContainer>
 			<TamzContainer>
 				<Boomz
-					active={true}
+					active={animate}
 					h={0}
 					v={0}
 					r={45}
@@ -19,7 +20,7 @@ const Home = () => {
 					fixedStop={false}
 					freez={false}
 				>
-					<img height={ 700 } src={ require("../assets/img/boom.png") } alt="logo" />					
+					<img height={ 690 } src={ require("../assets/img/boom.png") } alt="logo" />					
 					
 					<Title> Kwiz'Tam </Title>
 
@@ -28,7 +29,8 @@ const Home = () => {
 
 
 			<ButtonsContainer>
-				<Button
+				{/* <Button
+				active={animate}
 				h={5}
 				v={5}
 				r={18}
@@ -42,9 +44,21 @@ const Home = () => {
 					<Link to="/lobby">
 						Créer une partie 
 					</Link>
+				</Button> */}
+				<Button active={animate} fixedStop={true}> 	
+					<Link to="/lobby">
+						Créer une partie 
+					</Link>
 				</Button>
 				
-				<Button
+				<Button active={animate} fixedStop={true}>  
+					<Link to="/game">
+						Rejoindre une partie
+					</Link>
+				</Button>
+				
+				{/* <Button
+				active={animate}
 				h={5}
 				v={5}
 				r={18}
@@ -58,7 +72,7 @@ const Home = () => {
 					<Link to="/game">
 						Rejoindre une partie
 					</Link>
-				</Button>
+				</Button> */}
 			</ButtonsContainer>
 		</HomeContainer>
 	);
@@ -71,7 +85,7 @@ const HomeContainer = styled.div`
 
 	user-select: none;
 
-	overflow: hidden;
+	overflow: hidden visible;
 
 	display: flex;
 	justify-content: center;
@@ -80,8 +94,8 @@ const HomeContainer = styled.div`
 `;
 
 const TamzContainer = styled.div`
-	overflow: hidden;
-
+	overflow: hidden visible;
+	overflow-y: hidden;
 `;
 
 const ButtonsContainer = styled.div`
@@ -117,19 +131,24 @@ const Button = styled(ShakeLittle)`
 	
 	padding: 10px 20px;
 	margin: 10px;
+	
+	cursor: pointer;
+
+	transition-duration: 01s;
+
+	:hover {
+
+		/* select Link child */
+		& > * {
+			color: black;
+		}
+	}
 
 `;
 
 const Link = styled(NavLink)`
 	color: white;
 	text-decoration: none;
-
-	transition-duration: 0.1s;
-
-	:hover {
-		color: black;
-	}
-
 `;
 
 export default Home;
